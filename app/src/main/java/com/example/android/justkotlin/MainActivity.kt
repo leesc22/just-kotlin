@@ -2,16 +2,15 @@ package com.example.android.justkotlin
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.CheckBox
 import android.widget.EditText
-import android.widget.TextView
 import android.widget.Toast
-import com.example.android.justkotlin.R.id.quantity_text_view
 import kotlinx.android.synthetic.main.activity_main.quantity_text_view
 import android.content.Intent
 import android.net.Uri
+import java.text.NumberFormat
+import java.util.*
 
 
 /*
@@ -81,7 +80,7 @@ class MainActivity : AppCompatActivity() {
         // Send the order summary in the email body
         val intent = Intent(Intent.ACTION_SENDTO)
         intent.data = Uri.parse("mailto:") // only email apps should handle this
-        intent.putExtra(Intent.EXTRA_SUBJECT, "Just Kotlin order for $name")
+        intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.order_summary_email_subject, name))
         intent.putExtra(Intent.EXTRA_TEXT, priceMessage)
         if (intent.resolveActivity(packageManager) != null) {
             startActivity(intent)
@@ -123,12 +122,12 @@ class MainActivity : AppCompatActivity() {
      * @return text summary
      */
     private fun createOrderSummary(name:String, price: Int, addWhippedCream: Boolean, addChocolate: Boolean):String {
-        var priceMessage = "Name: $name"
-        priceMessage += "\nAdd whipped cream? $addWhippedCream"
-        priceMessage += "\nAdd chocolate? $addChocolate"
-        priceMessage += "\nQuantity: $quantity"
-        priceMessage += "\nTotal: $$price"
-        priceMessage += "\nThank you!"
+        var priceMessage = getString(R.string.order_summary_name, name)
+        priceMessage += "\n" + getString(R.string.order_summary_whipped_cream, addWhippedCream)
+        priceMessage += "\n" + getString(R.string.order_summary_chocolate, addChocolate)
+        priceMessage += "\n" + getString(R.string.order_summary_quantity, quantity)
+        priceMessage += "\n" + getString(R.string.order_summary_price, NumberFormat.getCurrencyInstance(Locale("ms", "MY")).format(price))
+        priceMessage += "\n${getString(R.string.thank_you)}"
         return priceMessage
     }
 
